@@ -1,9 +1,13 @@
+import kotlinx.io.buffered
+import kotlinx.io.readLine
+
 fun main() {
-    try {
-        val input = readln()
-        println("Echo: $input")
-    } catch (e: Throwable) {
-        println("Oh, can't read using kotlin io: ${e.message}")
+    println("Started. Enter something and press enter")
+    WasiStdInputSource().buffered().use { source ->
+        while (true) {
+            source.readLine()?.let { line -> println("Wasm received: $line") }
+            if (source.exhausted()) break
+        }
     }
-    println("Hello from Kotlin via WASI")
+    println("Done. Bye")
 }
