@@ -135,7 +135,7 @@ fun Project.createWasmtimeExec(
     nodeMjsFile: RegularFileProperty,
     taskName: String,
     taskGroup: String?,
-    startFunction: String
+    startFunction: String?
 ): TaskProvider<Exec> {
     val outputDirectory = nodeMjsFile.map { it.asFile.parentFile }
     val wasmFileName = nodeMjsFile.map { "${it.asFile.nameWithoutExtension}.wasm" }
@@ -167,8 +167,10 @@ fun Project.createWasmtimeExec(
             newArgs.add("-W")
             newArgs.add("function-references,gc,exceptions")
 
-            newArgs.add("--invoke")
-            newArgs.add(startFunction)
+            if (startFunction != null) {
+                newArgs.add("--invoke")
+                newArgs.add(startFunction)
+            }
 
             newArgs.add(wasmFileName.get())
 
@@ -205,7 +207,7 @@ tasks.withType<NodeJsExec>().findByName("wasmWasiNodeProductionRun")?.let { task
         task.inputFileProperty,
         "runWasm",
         "application",
-        "main"
+        null
     )
 
     wasmtimeRunTask.configure {
