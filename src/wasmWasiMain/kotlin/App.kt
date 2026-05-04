@@ -5,8 +5,7 @@ fun main() {
     println("Started. Enter something and press enter")
     WasiStdInputSource().buffered().use { source ->
         while (true) {
-            source.readLine()?.let { line -> println("Wasm received: $line") }
-            if (source.exhausted()) break
+            source.readLine()?.let { line -> println("Wasm received: $line") } ?: break
         }
     }
     println("Done. Bye")
